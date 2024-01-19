@@ -27,7 +27,8 @@ export class UrlshortenerService {
             const Url = new this.urlModel({
                 id: id,
                 longUrl: dto.longUrl,
-                shortUrl: shortUrl
+                shortUrl: shortUrl,
+                clickCount: 0
             });
             Url.save();
             return { message };         
@@ -43,10 +44,15 @@ export class UrlshortenerService {
     async getShortenedUrl(id: string){
         const url = await this.urlModel.findOne({id: id});
         if(!url){
-            const shortUrl = `localhost:3001/urlshortener/${id}`;
-            const url = await this.urlModel.findOne({shortUrl: shortUrl});
-            return { longUrl: url.longUrl };
+            return this.redirect(id);
         }
         return { shortUrl: url.shortUrl };
+    }
+
+    async redirect(id: string){
+        const shortUrl = `localhost:3001/urlshortener/${id}`;
+        const { longUrl, clickCount } = await this.urlModel.findOne({ shortUrl });
+        await this.urlModel.findOneAndUpdate({ shortUrl }, { clickCount: clickCount+1 });
+        return { longUrl: longUrl };
     }
 }

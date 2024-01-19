@@ -2,12 +2,12 @@ import { randomBytes } from "crypto";
 
 
 export const urlshortener = (longurl: string, id: string): any => {
-    const randomString = generateRandomString(8); //generate a random string
+    const randomString = generateRandomString(8); //generates a random string
     const shorturl = `localhost:3001/urlshortener/${randomString}`;
         
     return {
             shortUrl: shorturl,
-            message: `Url successfully shortened !! Go to localhost:3001/urlshortener/${id} to get the short url`
+            message: `Url successfully shortened !! Get it at: localhost:3001/urlshortener/${id}`
         }
 }
 
