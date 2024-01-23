@@ -1,13 +1,19 @@
 import { Module } from '@nestjs/common';
-import { UrlshortenerModule } from './urlshortener/urlshortener.module';
+import { UrlModule } from './url/url.module';
 import { MongooseModule } from '@nestjs/mongoose';
+import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
+import { RedirectionModule } from './redirection/redirection.module';
 
 @Module({
   imports: [
-    UrlshortenerModule,
-    MongooseModule.forRoot("mongodb://localhost:27017/urlshortener")
+    ConfigModule.forRoot(),
+    UrlModule,
+    MongooseModule.forRoot("mongodb://localhost:27017/urlshortener"),
+    UserModule,
+    AuthModule,
+    RedirectionModule
   ],
-  controllers: [],
-  providers: [],
 })
 export class AppModule {}

@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { UrlshortenerController } from './urlshortener.controller';
-import { UrlshortenerService } from './urlshortener.service';
+import { UrlController } from './url.controller';
+import { UrlService } from './url.service';
 import { FUNCTION, urlshortener } from './function';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Url, UrlSchema } from './schema';
+import { Url, UrlSchema } from '../common/schema';
 
 @Module({
   imports: [
@@ -14,13 +14,16 @@ import { Url, UrlSchema } from './schema';
       },
     ]),
   ],
-  controllers: [UrlshortenerController],
+  controllers: [UrlController],
   providers: [
-    UrlshortenerService,
+    UrlService,
     {
       provide: FUNCTION,
       useValue: urlshortener
     }
+  ],
+  exports: [
+    UrlService,
   ]
 })
-export class UrlshortenerModule {}
+export class UrlModule {}

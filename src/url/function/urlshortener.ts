@@ -7,7 +7,7 @@ export const urlshortener = (longurl: string, id: string): any => {
         
     return {
             shortUrl: shorturl,
-            message: `Url successfully shortened !! Get it at: localhost:3001/urlshortener/${id}`
+            message: `Url successfully shortened !! Get it at: localhost:3001/url/${id}`
         }
 }
 

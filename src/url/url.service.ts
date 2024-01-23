@@ -1,14 +1,14 @@
 import { Inject, Injectable, NotAcceptableException } from '@nestjs/common';
-import { CreateShortUrlDto } from './dto';
+import { CreateShortUrlDto } from '../common/dto';
 import { FUNCTION } from './function';
 import { InjectModel } from '@nestjs/mongoose';
-import { Url } from './schema';
+import { Url } from '../common/schema';
 import { Model } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 import validator from 'validator';
 
 @Injectable()
-export class UrlshortenerService {
+export class UrlService {
     constructor(
         @Inject(FUNCTION)
         private urlShortener: (longurl: string, id: string) => {
@@ -43,9 +43,6 @@ export class UrlshortenerService {
 
     async getShortenedUrl(id: string){
         const url = await this.urlModel.findOne({id: id});
-        if(!url){
-            return this.redirect(id);
-        }
         return { shortUrl: url.shortUrl };
     }
 
