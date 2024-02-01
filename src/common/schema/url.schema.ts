@@ -1,10 +1,10 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document, HydratedDocument } from "mongoose";
+import { HydratedDocument } from "mongoose";
 
 export type UrlDocument = HydratedDocument<Url>;
 
 @Schema()
-export class Url extends Document {
+export class Url {
     @Prop({ type: String })
     id: string;
 
@@ -16,6 +16,12 @@ export class Url extends Document {
 
     @Prop({ type: Number })
     clickCount: number;
+
+    @Prop({ type: Date, required: true })    
+    createdAt: Date;
+
+    @Prop({ type: String })
+    createdBy: string;
 }
 
 export const UrlSchema = SchemaFactory.createForClass(Url);

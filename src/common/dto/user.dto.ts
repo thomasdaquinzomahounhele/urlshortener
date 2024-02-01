@@ -4,6 +4,9 @@ export class UserDto  {
     @Expose()
     id: string;
 
+    @Expose()
+    userId: string;
+    
     @Expose()	
     firstname: string;
 
@@ -15,4 +18,7 @@ export class UserDto  {
 
     @Expose()	
     hashedpassword: string;
+
+    @Expose()	
+    subscription: string;
 }

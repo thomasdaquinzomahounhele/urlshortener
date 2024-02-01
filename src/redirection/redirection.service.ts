@@ -8,6 +8,7 @@ export class RedirectionService {
     ){}
 
     async redirect(id: string){
-        return await this.urlService.redirect(id);
+        const { longUrl } = await this.urlService.incrementClickCount(id);
+        return { longUrl };
     }
 }

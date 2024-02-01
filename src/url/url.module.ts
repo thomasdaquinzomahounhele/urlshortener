@@ -3,7 +3,7 @@ import { UrlController } from './url.controller';
 import { UrlService } from './url.service';
 import { FUNCTION, urlshortener } from './function';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Url, UrlSchema } from '../common/schema';
+import { Url, UrlSchema, UserUrl, UserUrlSchema } from '../common/schema';
 
 @Module({
   imports: [
@@ -12,6 +12,10 @@ import { Url, UrlSchema } from '../common/schema';
         name: Url.name,
         schema: UrlSchema
       },
+      {
+        name: UserUrl.name,
+        schema: UserUrlSchema
+      }
     ]),
   ],
   controllers: [UrlController],

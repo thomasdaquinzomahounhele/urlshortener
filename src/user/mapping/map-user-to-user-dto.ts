@@ -1,18 +1,20 @@
 import { plainToClass } from "class-transformer";
-import { User, UserDto } from "src/common";
+import { User, UserDto } from "../../common";
 
 export const mapUserToUserDto = (user: User): UserDto => {
     return plainToClass(
         UserDto,
         {
-            id: user._id,
+            userId: user.userId,
             firstname: user.firstname,
             lastname: user.lastname,
             email: user.email,
             hashedpassword: user.hashedpassword,
+            subscription: user.subscription,
+
         },
         {
             excludeExtraneousValues: true,
         }
-    )
+    );
 }

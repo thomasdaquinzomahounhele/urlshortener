@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Req } from '@nestjs/common';
 import { UrlService } from './url.service';
-import { CreateShortUrlDto, Public } from '../common';
+import { CreateShortUrlDto } from '../common';
+import { Request } from 'express';
 
 @Controller('url')
 export class UrlController {
@@ -9,8 +10,9 @@ export class UrlController {
     ){}
     
     @Post('shortenUrl')
-    createShortenedUrl(@Body() dto: CreateShortUrlDto){
-        return this.urlService.createShortenedUrl(dto);
+    createShortenedUrl(@Body() dto: CreateShortUrlDto, @Req() req: Request){
+        const { user } = req.headers;
+        return this.urlService.createShortenedUrl(dto, user);
     }
 
     @Get(':id')
