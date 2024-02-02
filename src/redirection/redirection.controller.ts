@@ -9,8 +9,8 @@ export class RedirectionController {
     ){}
     
     @Public()
-    @Get(':id')
-    redirect(@Param('id')id: string){
-        return this.redirectionService.redirect(id);
+    @Get(':param')
+    redirect(@Param('param')param: string): Promise<{ longUrl: string; }>{
+        return this.redirectionService.redirect(param);
     }
 }

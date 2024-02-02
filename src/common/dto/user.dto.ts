@@ -1,4 +1,5 @@
 import { Expose } from "class-transformer";
+import { Subscription } from "../enum";
 
 export class UserDto  {
     @Expose()
@@ -20,5 +21,5 @@ export class UserDto  {
     hashedpassword: string;
 
     @Expose()	
-    subscription: string;
+    subscription: Subscription;
 }
