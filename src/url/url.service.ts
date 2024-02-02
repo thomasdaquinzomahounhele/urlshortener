@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotAcceptableException } from '@nestjs/common';
+import { Inject, Injectable, NotAcceptableException, forwardRef } from '@nestjs/common';
 import { CreateShortUrlDto } from '../common/dto';
 import { FUNCTION, Urlshortener } from './function';
 import { InjectModel } from '@nestjs/mongoose';
@@ -6,6 +6,8 @@ import { Url, UserUrl } from '../common/schema';
 import { Model } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 import validator from 'validator';
+import { Subscription, TotalLinks } from '../common';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class UrlService {
@@ -15,7 +17,9 @@ export class UrlService {
         @InjectModel(Url.name)
         private urlModel: Model<Url>,
         @InjectModel(UserUrl.name)
-        private userUrlModel: Model<UserUrl>
+        private userUrlModel: Model<UserUrl>,
+        @Inject(forwardRef(() => UserService))
+        private userService: UserService
     ){}
 
     async findUserUrls(userId: string): Promise<UserUrl | undefined> {
@@ -23,12 +27,47 @@ export class UrlService {
         return userUrls;
     }
 
-    async createShortenedUrl(dto: CreateShortUrlDto, user: any){
+    async isAllowed(userId: string, subscription: Subscription): Promise<boolean>{
+        const userUrls  = await this.findUserUrls(userId);
+        
+        if(!userUrls){
+            return true; // case new user shortening url
+        };
+        if(subscription == Subscription.Free){
+            if(userUrls.urls.length >= TotalLinks.Free){
+                return false;
+            }else{
+                return true;
+            }
+        }else if(subscription == Subscription.Intermediate){
+            if(userUrls.urls.length >= TotalLinks.Intermediate){
+                return false;
+            }else{
+                return true;
+            }
+        }else if(subscription == Subscription.Premium){
+            if(userUrls.urls.length >= TotalLinks.Premium){
+                return false;
+            }else{
+                return true;
+            }
+        }
+    }
+
+    async createShortenedUrl(dto: CreateShortUrlDto, user: any): Promise<{ message: string }>{
+        const { sub } = user;
+        const { subscription } = await this.userService.findOneByUserId(sub);
+        const isAllowed: boolean = await this.isAllowed(sub, subscription);
+
+        if(isAllowed === false){
+            return {
+                message: "You have reached the limit of short links you can create this month !! Upgrade your subscription plan for more. See our offers here: localhost:3001/subscription"
+            }
+        }
+
         if (validator.isURL(dto.longUrl)) {
             const id = uuidv4(); // Generate a UUID
-            const { shortUrl, message } = this.urlShortener(dto.longUrl, id);
-            const { sub } = user;
-            console.log('this is the user coming from the request object in the createShortenedUrl method of the urlService', user);
+            const { shortUrl, message } = this.urlShortener(subscription, dto, id);
             const Url = new this.urlModel({
                 id: id,
                 longUrl: dto.longUrl,
@@ -49,24 +88,30 @@ export class UrlService {
         
     }
 
-    async getShortenedUrl(id: string){
+    async getShortenedUrl(id: string): Promise<{ shortUrl: string; }>{
         const url = await this.urlModel.findOne({id: id});
         return { shortUrl: url.shortUrl };
     }
 
-    async incrementClickCount(id: string){
-        const shortUrl = `localhost:3001/urlshortener/${id}`;
-        const { clickCount, createdBy } = await this.urlModel.findOne({ shortUrl });
+    async incrementClickCount(param: string): Promise<Url>{
+        const shortUrl = `localhost:3001/urlshortener/${param}`;
+        const customShortUrl = `localhost:3001/${param}`;
+        const url: Url = await this.urlModel.findOne({ shortUrl });
+        const customUrl: Url = await this.urlModel.findOne({ customShortUrl });
+        let createdBy;
+        let clickCount; 
+        if(url){
+            ({ clickCount, createdBy } = url);
+        }else if(customUrl){
+            ({ clickCount, createdBy } = customUrl);
+        }
         const updatedUrl = await this.urlModel.findOneAndUpdate({ shortUrl }, { clickCount: clickCount+1 });
         await this.updateUserUrls(createdBy, updatedUrl);
         return updatedUrl;
     }
 
-    async updateUserUrls(userId: string, url: Url){
-        
-        console.log('this is the userId in the updateUserUrls method of the urlService', userId);
+    async updateUserUrls(userId: string, url: Url): Promise<UserUrl>{
         const existingUser = await this.findUserUrls(userId);
-        console.log('this is the existingUser in the updateUserUrls method of the urlService', existingUser);
         if(existingUser){
             let updatedUrls = [...existingUser.urls];
             updatedUrls.push(url);

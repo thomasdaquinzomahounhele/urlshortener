@@ -5,6 +5,7 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { RedirectionModule } from './redirection/redirection.module';
+import { SubscriptionModule } from './subscription/subscription.module';
 
 @Module({
   imports: [
@@ -13,7 +14,8 @@ import { RedirectionModule } from './redirection/redirection.module';
     MongooseModule.forRoot("mongodb://localhost:27017/urlshortener"),
     UserModule,
     AuthModule,
-    RedirectionModule
+    RedirectionModule,
+    SubscriptionModule
   ],
 })
 export class AppModule {}

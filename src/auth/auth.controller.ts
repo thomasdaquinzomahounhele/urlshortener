@@ -18,7 +18,7 @@ export class AuthController {
     @Public()
     @HttpCode(HttpStatus.OK)
     @Post('signin')
-    signIn(@Body() dto: SignInDto){
+    signIn(@Body() dto: SignInDto): Promise<{ access_token: string } | { success: boolean, message: string }>{
         return this.authService.signIn(dto.email, dto.password);
     }
 }

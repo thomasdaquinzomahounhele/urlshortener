@@ -10,13 +10,13 @@ export class UrlController {
     ){}
     
     @Post('shortenUrl')
-    createShortenedUrl(@Body() dto: CreateShortUrlDto, @Req() req: Request){
+    createShortenedUrl(@Body() dto: CreateShortUrlDto, @Req() req: Request): Promise<{ message: string }>{
         const { user } = req.headers;
         return this.urlService.createShortenedUrl(dto, user);
     }
 
     @Get(':id')
-    getShortenedUrl(@Param('id') id: string){
+    getShortenedUrl(@Param('id') id: string): Promise<{ shortUrl: string; }>{
         return this.urlService.getShortenedUrl(id);
     }
 }

@@ -1,35 +1,46 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from '../common/schema';
 import * as bcrypt from 'bcrypt';
 import { mapUserToGetUserProfileOutput, mapUserToUserDto } from './mapping';
 import { 
+    GetDashboardOutput,
     GetUserProfileOutput, 
     SignUpDto, 
     Subscription, 
     UpdateUserDto, 
+    UpgradeSubscriptionPlanDto, 
     UserDto 
 } from '../common';
 import { v4 as uuidv4 } from 'uuid';
-import { Request } from 'express';
+import { UrlService } from '../url/url.service';
+import { mapUserUrlToDashboardOutput } from './mapping/map-user-url-to-dashboard-output';
 
 @Injectable()
 export class UserService {
     constructor(
         @InjectModel(User.name) 
-        private userModel: Model<User>
+        private userModel: Model<User>,
+        @Inject(forwardRef(() => UrlService))
+        private urlService: UrlService,
     ){}
 
-    async findOne(email: string): Promise<UserDto | undefined>{
+    async findOneByEmail(email: string): Promise<UserDto | undefined>{
         const user = await this.userModel.findOne({ email })
         const result = user ? mapUserToUserDto(user) : undefined;
         return result;
-    }
+    };
 
-    async signUp(dto: SignUpDto)/*: Promise<{ message: string }>*/{
+    async findOneByUserId(userId: string): Promise<UserDto | undefined>{
+        const user = await this.userModel.findOne({ userId })
+        const result = user ? mapUserToUserDto(user) : undefined;
+        return result;
+    };
+
+    async signUp(dto: SignUpDto): Promise<{ message: string }>{
         const { firstname, lastname, email, password } = dto;
-        const existingUser = await this.findOne(email);
+        const existingUser = await this.findOneByEmail(email);
         if(existingUser){
             return { message: "Email address already in use. Please choose a different email"}
         }
@@ -47,13 +58,14 @@ export class UserService {
         });
         User.save();
         return { 
-            message: 'You have successfully signed up . Go sign in at localhost:3001/auth/signin'
+            message: 'You have successfully signed up. You can shorten your links right after signing in at localhost:3001/auth/signin'
         };
-    }
+    };
 
-    getProfile(req: Request ): GetUserProfileOutput{
-        const { user } = req.headers;
-        return mapUserToGetUserProfileOutput(user);
+    async getProfile(user: any ): Promise<GetUserProfileOutput>{
+        const { sub } = user;
+        const realUser = await this.findOneByUserId(sub);
+        return mapUserToGetUserProfileOutput(realUser);
     }
 
     async updateProfile(user: any, dto: UpdateUserDto): Promise<GetUserProfileOutput>{
@@ -77,5 +89,28 @@ export class UserService {
             );
         }
         return mapUserToGetUserProfileOutput(mapUserToUserDto(updatedUser));
-    }
+    };
+
+    async upgradeSubscription(user: any, dto: UpgradeSubscriptionPlanDto): Promise<{ message: string; }>{
+        const { sub } = user;
+        await this.userModel.findOneAndUpdate(
+            { userId: sub },
+            { 
+                $set: {
+                    subscription: dto.newPlan,
+                },
+            },
+            { new: true },
+        );
+        return {
+            message: `Now you can benefit from all the advantages of the #${dto.newPlan} plan`,
+        }
+    };
+
+    async getUserDashboard(user: any): Promise<GetDashboardOutput>{
+        const { sub } = user;
+        const userUrls = await this.urlService.findUserUrls(sub);
+        const { subscription } = await this.findOneByUserId(sub);
+        return mapUserUrlToDashboardOutput(subscription, userUrls.urls);
+    }    
 }
