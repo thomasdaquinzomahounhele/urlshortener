@@ -6,6 +6,7 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { RedirectionModule } from './redirection/redirection.module';
 import { SubscriptionModule } from './subscription/subscription.module';
+import { CustomDomainRedirectionModule } from './custom-domain-redirection/custom-domain-redirection.module';
 
 @Module({
   imports: [
@@ -15,7 +16,8 @@ import { SubscriptionModule } from './subscription/subscription.module';
     UserModule,
     AuthModule,
     RedirectionModule,
-    SubscriptionModule
+    SubscriptionModule,
+    CustomDomainRedirectionModule
   ],
 })
 export class AppModule {}

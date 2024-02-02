@@ -94,18 +94,22 @@ export class UrlService {
     }
 
     async incrementClickCount(param: string): Promise<Url>{
-        const shortUrl = `localhost:3001/urlshortener/${param}`;
+        const normalShortUrl = `localhost:3001/urlshortener/${param}`;
         const customShortUrl = `localhost:3001/${param}`;
-        const url: Url = await this.urlModel.findOne({ shortUrl });
-        const customUrl: Url = await this.urlModel.findOne({ customShortUrl });
-        let createdBy;
-        let clickCount; 
-        if(url){
-            ({ clickCount, createdBy } = url);
-        }else if(customUrl){
-            ({ clickCount, createdBy } = customUrl);
+        const normalUrl: Url = await this.urlModel.findOne({ shortUrl: normalShortUrl });
+        const customUrl: Url = await this.urlModel.findOne({ shortUrl: customShortUrl });
+        let createdBy: string;
+        let clickCount: number; 
+        let updatedUrl: Url;
+        if(normalUrl){
+             ({ clickCount, createdBy } = normalUrl);
+            updatedUrl = await this.urlModel.findOneAndUpdate({ shortUrl: normalShortUrl }, { clickCount: clickCount+1 });
+        } 
+        if(customUrl){
+             ({ clickCount, createdBy } = customUrl);
+            updatedUrl = await this.urlModel.findOneAndUpdate({ shortUrl: customShortUrl}, { clickCount: clickCount+1 });
         }
-        const updatedUrl = await this.urlModel.findOneAndUpdate({ shortUrl }, { clickCount: clickCount+1 });
+
         await this.updateUserUrls(createdBy, updatedUrl);
         return updatedUrl;
     }
