@@ -94,19 +94,32 @@ export class UrlService {
     }
 
     async incrementClickCount(param: string): Promise<Url>{
-        const shortUrl = `localhost:3001/urlshortener/${param}`;
+        const normalShortUrl = `localhost:3001/urlshortener/${param}`;
         const customShortUrl = `localhost:3001/${param}`;
-        const url: Url = await this.urlModel.findOne({ shortUrl });
-        const customUrl: Url = await this.urlModel.findOne({ customShortUrl });
-        let createdBy;
-        let clickCount; 
-        if(url){
-            ({ clickCount, createdBy } = url);
-        }else if(customUrl){
-            ({ clickCount, createdBy } = customUrl);
+        const normalUrl: Url = await this.urlModel.findOne({ shortUrl: normalShortUrl });
+        const customUrl: Url = await this.urlModel.findOne({ shortUrl: customShortUrl });
+        let createdBy: string;
+        let clickCount: number; 
+        let updatedUrl: Url;
+
+        if(normalUrl){
+             ({ clickCount, createdBy } = normalUrl);
+            updatedUrl = await this.urlModel.findOneAndUpdate(
+                { shortUrl: normalShortUrl }, 
+                { clickCount: clickCount+1 },
+                { new: true }
+            );
+        } 
+        if(customUrl){
+             ({ clickCount, createdBy } = customUrl);
+            updatedUrl = await this.urlModel.findOneAndUpdate(
+                { shortUrl: customShortUrl}, 
+                { clickCount: clickCount+1 },
+                { new: true }
+            );
         }
-        const updatedUrl = await this.urlModel.findOneAndUpdate({ shortUrl }, { clickCount: clickCount+1 });
-        await this.updateUserUrls(createdBy, updatedUrl);
+
+        await this.updateUserUrlsClickCount(createdBy, updatedUrl);
         return updatedUrl;
     }
 
@@ -130,5 +143,28 @@ export class UrlService {
             })
             return userUrls.save();
         }
+    }
+
+    async updateUserUrlsClickCount(userId: string, url: Url): Promise<UserUrl>{
+        const userUrls = await this.findUserUrls(userId);
+        const index = userUrls.urls.findIndex((element) => ( element.id == url.id));
+        userUrls.urls[index] = url;
+        return await this.userUrlModel.findOneAndUpdate(
+            { userId: userId },
+            { $set: {
+                urls: userUrls.urls
+                }
+            },
+            { new: true }
+        )
+    }
+
+    async cleanUp(args: any): Promise<void>{
+        const deleteResult = await this.urlModel.deleteMany(args)
+    }
+
+    async findAllUserUrls(){
+        const userUrls = await this.userUrlModel.find({});
+        return userUrls;
     }
 }
