@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { RedirectionController } from './redirection.controller';
+import { RedirectionService } from './redirection.service';
 
 describe('RedirectionController', () => {
   let controller: RedirectionController;
@@ -7,6 +8,12 @@ describe('RedirectionController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [RedirectionController],
+      providers: [
+        {
+          provide: RedirectionService,
+          useValue: {}
+        }
+      ]
     }).compile();
 
     controller = module.get<RedirectionController>(RedirectionController);

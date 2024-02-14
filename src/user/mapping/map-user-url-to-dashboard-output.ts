@@ -4,7 +4,7 @@ import { GetDashboardOutput, Subscription, Url } from "../../common";
 export const mapUserUrlToDashboardOutput = (subscription: Subscription, urls: Url[]): GetDashboardOutput => {
         const UserUrls = urls.map((url: Url) => {
             return mapUrlToUrlDto(subscription, url);
-        })
+        });
         
         return {
             UserUrls: UserUrls,

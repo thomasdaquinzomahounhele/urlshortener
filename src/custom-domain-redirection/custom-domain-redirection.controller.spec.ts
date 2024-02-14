@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CustomDomainRedirectionController } from './custom-domain-redirection.controller';
+import { CustomDomainRedirectionService } from './custom-domain-redirection.service';
 
 describe('CustomDomainRedirectionController', () => {
   let controller: CustomDomainRedirectionController;
@@ -7,6 +8,12 @@ describe('CustomDomainRedirectionController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [CustomDomainRedirectionController],
+      providers: [
+        {
+          provide: CustomDomainRedirectionService,
+          useValue: {}
+        }
+      ]
     }).compile();
 
     controller = module.get<CustomDomainRedirectionController>(CustomDomainRedirectionController);

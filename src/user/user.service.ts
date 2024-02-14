@@ -42,13 +42,15 @@ export class UserService {
         const { firstname, lastname, email, password } = dto;
         const existingUser = await this.findOneByEmail(email);
         if(existingUser){
-            return { message: "Email address already in use. Please choose a different email"}
+            return { message: "Email address already in use. Please choose a different email" }
         }
 
         const userId = uuidv4(); // Generate a UUID
         const salt = await bcrypt.genSalt();
         const hashedpassword = await bcrypt.hash(password, salt);
-        const User = new this.userModel({
+        
+        //used insertMany to facilitate testing
+        await this.userModel.insertMany({
             userId: userId,
             firstname: firstname,
             lastname: lastname,
@@ -56,7 +58,6 @@ export class UserService {
             hashedpassword: hashedpassword,
             subscription: Subscription.Free
         });
-        User.save();
         return { 
             message: 'You have successfully signed up. You can shorten your links right after signing in at localhost:3001/auth/signin'
         };

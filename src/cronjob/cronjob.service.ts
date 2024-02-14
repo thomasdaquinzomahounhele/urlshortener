@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { UrlService } from 'src/url/url.service';
+import { UrlService } from '../url/url.service';
 
 @Injectable()
 export class CronjobService {
@@ -11,7 +11,7 @@ export class CronjobService {
 
 
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT, { name: 'Clean up'})
-  async cleanUp() {
+  async handleCleanUpCron() {
     this.logger.debug('Midnight clean up');
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate()-30)
@@ -20,9 +20,9 @@ export class CronjobService {
     });
 
     const userUrls = await this.urlService.findAllUserUrls();
-    for (const userUrl of userUrls) {
-        userUrl.urls = userUrl.urls.filter(url => !(url.createdAt < thirtyDaysAgo && url.clickCount < 10));
-        await userUrl.save();
+    for(const userUrl of userUrls){
+        const updatedUserUrls = userUrl.urls.filter(url => !(url.createdAt < thirtyDaysAgo && url.clickCount < 10));
+        await this.urlService.updateUserUrls(userUrl.userId, updatedUserUrls);
     }
   }
 }
