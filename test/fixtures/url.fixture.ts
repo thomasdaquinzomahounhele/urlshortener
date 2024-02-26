@@ -1,4 +1,5 @@
 import { 
+    CreateShortUrlDto,
     TEST_CLICK_COUNT, 
     TEST_ID, 
     TEST_LONG_URL, 
@@ -170,3 +171,11 @@ export const URL_FIXTURE: Partial<Url[]> = [
         createdBy: TEST_USER_ID
     }
 ];
+
+export const createShortUrlDto: CreateShortUrlDto = {
+    longUrl: TEST_LONG_URL
+};
+
+export const E2E_URL_REDIRECTION_PARAM = '5c75d4ea';
+export const E2E_URL_CUSTOM_REDIRECTION_PARAM = 'newdomain-cf5b2b31';
+export const E2E_URL_ID = '98fa4581-1d29-4d4e-a4bf-9c59e872d527';
