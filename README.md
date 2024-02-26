@@ -11,7 +11,7 @@ To be able to run the code you need some tooling installed first:
 - docker - https://docs.docker.com/get-docker/
 - MongoDB - https://www.mongodb.com/docs/v3.0/tutorial/install-mongodb-on-ubuntu/
 
-To install the dependencies using npm run “ npm install”, for yarn run “yarn install” in your terminal.
+To install the dependencies run “ npm install” or “yarn install” in your terminal.
 
 To test the app you need an API Client like:
 
