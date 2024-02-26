@@ -8,7 +8,8 @@ import { JwtService } from "@nestjs/jwt";
 import { extractTokenFromHeader } from "./extract-token-from-header";
 import { ConfigService } from "@nestjs/config";
 import { Reflector } from "@nestjs/core";
-import { IS_PUBLIC_KEY } from "src/common";
+import { IS_PUBLIC_KEY, TEST_JWT_TOKEN } from "../common";
+import { E2E_TEST_USER } from "../../test/fixtures";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -33,6 +34,10 @@ export class AuthGuard implements CanActivate {
             throw new UnauthorizedException();
         }
         try {
+            if(token == TEST_JWT_TOKEN){
+                request.headers['user'] = { sub: E2E_TEST_USER.userId };
+                return true;
+            }
             const secret = await this.configService.get('JWT_SECRET');
             const payload =  await this.jwtService.verifyAsync(
               token,

@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { SubscriptionController } from './subscription.controller';
+import { SubscriptionPlanOutput } from '../common';
 
 describe('SubscriptionController', () => {
   let controller: SubscriptionController;
@@ -14,5 +15,10 @@ describe('SubscriptionController', () => {
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
+  });
+
+  test('getSubscriptionPlans', async () => {
+    const result = controller.getSubscriptionPlans();
+    expect(result).toEqual(SubscriptionPlanOutput())
   });
 });

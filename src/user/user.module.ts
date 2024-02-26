@@ -2,8 +2,8 @@ import { Module, forwardRef } from '@nestjs/common';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { User, UserSchema } from 'src/common/schema';
-import { UrlModule } from 'src/url/url.module';
+import { User, UserSchema } from '../common/schema';
+import { UrlModule } from '../url/url.module';
 
 @Module({
   imports: [

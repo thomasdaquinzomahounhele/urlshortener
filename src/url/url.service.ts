@@ -7,7 +7,7 @@ import { Model } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 import validator from 'validator';
 import { Subscription, TotalLinks } from '../common';
-import { UserService } from 'src/user/user.service';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class UrlService {
@@ -21,6 +21,11 @@ export class UrlService {
         @Inject(forwardRef(() => UserService))
         private userService: UserService
     ){}
+
+    async findOneUrl(id: string): Promise<Url>{
+        const url: Url = await this.urlModel.findOne({ id: id });
+        return url;
+    }
 
     async findUserUrls(userId: string): Promise<UserUrl | undefined> {
         const userUrls = await this.userUrlModel.findOne({ userId });
@@ -68,7 +73,7 @@ export class UrlService {
         if (validator.isURL(dto.longUrl)) {
             const id = uuidv4(); // Generate a UUID
             const { shortUrl, message } = this.urlShortener(subscription, dto, id);
-            const Url = new this.urlModel({
+            await this.urlModel.insertMany({
                 id: id,
                 longUrl: dto.longUrl,
                 shortUrl: shortUrl,
@@ -76,16 +81,15 @@ export class UrlService {
                 createdAt: new Date(),
                 createdBy: sub
             });
-            Url.save();
-            await this.updateUserUrls(sub, Url);
+            const Url = await this.findOneUrl(id);
+            await this.updateUserUrlsWithNewUrl(sub, Url);
             return { message };         
         } else {
             throw new NotAcceptableException(
                 "Please enter a valid url",
                 { description: "Verify if you copied the whole link. If you did !! Verify if your url actually works and directs to a website"},
             );
-        }
-        
+        } 
     }
 
     async getShortenedUrl(id: string): Promise<{ shortUrl: string; }>{
@@ -123,7 +127,7 @@ export class UrlService {
         return updatedUrl;
     }
 
-    async updateUserUrls(userId: string, url: Url): Promise<UserUrl>{
+    async updateUserUrlsWithNewUrl(userId: string, url: Url): Promise<UserUrl>{
         const existingUser = await this.findUserUrls(userId);
         if(existingUser){
             let updatedUrls = [...existingUser.urls];
@@ -137,12 +141,24 @@ export class UrlService {
                 { new: true }
             )
         } else {
-            const userUrls = new this.userUrlModel({
+            await this.userUrlModel.insertMany({
                 userId: userId,
                 urls: [url],
-            })
-            return userUrls.save();
+            });
+            const userUrls = await this.userUrlModel.findOne({ userId: userId });
+            return userUrls;
         }
+    }
+
+    async updateUserUrls(userId: string, urls: Url[]): Promise<UserUrl>{
+            return await this.userUrlModel.findOneAndUpdate(
+                { userId: userId },
+                { $set: {
+                    urls: urls
+                    }
+                },
+                { new: true }
+            )
     }
 
     async updateUserUrlsClickCount(userId: string, url: Url): Promise<UserUrl>{
@@ -160,7 +176,7 @@ export class UrlService {
     }
 
     async cleanUp(args: any): Promise<void>{
-        const deleteResult = await this.urlModel.deleteMany(args)
+        await this.urlModel.deleteMany(args)
     }
 
     async findAllUserUrls(){

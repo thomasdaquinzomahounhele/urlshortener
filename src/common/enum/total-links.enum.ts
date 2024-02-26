@@ -1,5 +1,5 @@
 export enum TotalLinks {
-    Free = 50,
+    Free = 20,
     Intermediate = 200,
-    Premium = 1000
+    Premium = 2000
 }

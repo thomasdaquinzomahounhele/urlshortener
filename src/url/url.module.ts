@@ -4,7 +4,7 @@ import { UrlService } from './url.service';
 import { FUNCTION, urlshortener } from './function';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Url, UrlSchema, UserUrl, UserUrlSchema } from '../common/schema';
-import { UserModule } from 'src/user/user.module';
+import { UserModule } from '../user/user.module';
 
 @Module({
   imports: [

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { CronjobService } from './cronjob.service';
-import { UrlModule } from 'src/url/url.module';
+import { UrlModule } from '../url/url.module';
 
 @Module({
   imports: [UrlModule],

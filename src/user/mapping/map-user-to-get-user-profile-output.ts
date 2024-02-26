@@ -1,4 +1,4 @@
-import { GetUserProfileOutput, UserDto } from "../../common"
+import { GetUserProfileOutput } from "../../common"
 
 export const mapUserToGetUserProfileOutput = (user: any): GetUserProfileOutput => {
     return {
