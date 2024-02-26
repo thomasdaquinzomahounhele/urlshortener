@@ -1,73 +1,37 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# urlshortener
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+**Project Description**: 
+Like the title suggests, this api shortens long URLs and its main features are short-links with a custom domain and tracking the number of clicks per links.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Pre-requisites
 
-## Description
+To be able to run the code you need some tooling installed first:
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- Node.js - https://nodejs.org/
+- docker - https://docs.docker.com/get-docker/
+- MongoDB - https://www.mongodb.com/docs/v3.0/tutorial/install-mongodb-on-ubuntu/
 
-## Installation
+To install the dependencies using npm run “ npm install”, for yarn run “yarn install” in your terminal.
 
-```bash
-$ npm install
-```
+To test the app you need an API Client like:
 
-## Running the app
+- Postman - https://www.postman.com/downloads/
+- Insomnia - https://insomnia.rest/download
 
-```bash
-# development
-$ npm run start
+## Usage
 
-# watch mode
-$ npm run start:dev
+- user sign-up: go to localhost:3001/user/signup and provide an object with firstname, lastname, email, and password properties.
+- user sign-in: go to localhost:3001/auth/signin and provide an object with your email and password properties.
+- shorten url: go to localhost:3001/url/shortenUrl provide your access_token and an object with a longUrl field with your URL. 
+- user dashboard: go to localhost:3001/user/dashboard and provide your acces_token
+- user profile: go to localhost:3001/user/profile and provide your acces_token
+- user update profile: go to localhost:3001/user/update and provide your acces_token with an object with either firstame, lastname, email and password properties or all if you want to change all of them.
+- user upgrade subscription plan: go to localhost:3001/user/upgrade and provide your acces_token with an object with a newPlan properties set to “Intermediate” or “Premium” plan since by default every user is on a free subscription plan.
+- see all the subscription plans: go to localhost:3001/subscription.
 
-# production mode
-$ npm run start:prod
-```
+**Interpretation**: 
 
-## Test
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+When using the app:
+- if you provide a fake URL meaning a URL that doesn’t direct to a web page, you will receive an error message saying that you provided an invalid URL
+- if your email is already in the database you will receive a message saying that the email is already in use
+- the subscription plan has only three options: “Free”, “Intermediate” and “Premium”; if you provide a plan other than these, you will receive an error message. 
