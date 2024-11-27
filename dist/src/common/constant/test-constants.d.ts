@@ -1,0 +1,11 @@
+export declare const TEST_EMAIL = "testemail@gmail.com";
+export declare const TEST_USER_ID = "test_user_id";
+export declare const TEST_ID = "test_id";
+export declare const TEST_FIRST_NAME = "test_firstname";
+export declare const TEST_LAST_NAME = "test_lastname";
+export declare const TEST_PASSWORD = "test_password";
+export declare const TEST_HASHED_PASSWORD = "$2a$10$CQz/l8A6mSY3RNIcF0vH0ePAAdueD1wJjcro/cDq79QsMaWBmuj36";
+export declare const TEST_LONG_URL = "https://docs.nestjs.com/techniques";
+export declare const TEST_SHORT_URL = "localhost:3001/urlshortener/test_shorturl";
+export declare const TEST_CLICK_COUNT = 2;
+export declare const TEST_JWT_TOKEN = "test_jwt_token";

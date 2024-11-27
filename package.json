@@ -8,8 +8,8 @@
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "prestart": "docker-compose up -d mongodb_container",
-    "prestart:dev": "docker-compose up -d mongodb_container",
+    "prestart": "docker compose up -d mongodb_container",
+    "prestart:dev": "docker compose up -d mongodb_container",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
