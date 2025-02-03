@@ -4,6 +4,7 @@ import { Request } from 'express';
 export declare class UrlController {
     private urlService;
     constructor(urlService: UrlService);
+    private readonly logger;
     createShortenedUrl(dto: CreateShortUrlDto, req: Request): Promise<{
         message: string;
     }>;

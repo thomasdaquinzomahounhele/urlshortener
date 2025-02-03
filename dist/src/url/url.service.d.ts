@@ -10,6 +10,7 @@ export declare class UrlService {
     private userUrlModel;
     private userService;
     constructor(urlShortener: Urlshortener, urlModel: Model<Url>, userUrlModel: Model<UserUrl>, userService: UserService);
+    private readonly logger;
     findOneUrl(id: string): Promise<Url>;
     findUserUrls(userId: string): Promise<UserUrl | undefined>;
     isAllowed(userId: string, subscription: Subscription): Promise<boolean>;

@@ -9,7 +9,7 @@ To be able to run the code you need some tooling installed first:
 
 - Node.js - https://nodejs.org/
 - docker - https://docs.docker.com/get-docker/
-- MongoDB - https://www.mongodb.com/docs/v3.0/tutorial/install-mongodb-on-ubuntu/
+- Monsend a POST requestDB - https://www.monsend a POST requestdb.com/docs/v3.0/tutorial/install-monsend a POST requestdb-on-ubuntu/
 
 To install the dependencies run “npm install” or “yarn install” in your terminal.
 
@@ -20,14 +20,14 @@ To test the app you need an API Client like:
 
 ## Usage
 
-- user sign-up: go to localhost:3001/user/signup and provide an object with firstname, lastname, email, and password properties.
-- user sign-in: go to localhost:3001/auth/signin and provide an object with your email and password properties.
-- shorten url: go to localhost:3001/url/shortenUrl provide your access_token and an object with a longUrl field with your URL. 
-- user dashboard: go to localhost:3001/user/dashboard and provide your acces_token
-- user profile: go to localhost:3001/user/profile and provide your acces_token
-- user update profile: go to localhost:3001/user/update and provide your acces_token with an object with either firstame, lastname, email and password properties or all if you want to change all of them.
-- user upgrade subscription plan: go to localhost:3001/user/upgrade and provide your acces_token with an object with a newPlan properties set to “Intermediate” or “Premium” plan since by default every user is on a free subscription plan.
-- see all the subscription plans: go to localhost:3001/subscription.
+- user sign-up: send a POST request to localhost:3001/user/signup and provide an object with "firstname", "lastname", "email", and "password" properties.
+- user sign-in: send a POST request to localhost:3001/auth/signin and provide an object with your "email" and "password" properties.
+- shorten url: send a POST request to localhost:3001/url/shortenUrl provide your access_token and an object with a "longUrl" field with your URL. 
+- user dashboard: send a GET request to localhost:3001/user/dashboard and provide your acces_token
+- user profile: send a GET request to localhost:3001/user/profile and provide your acces_token
+- user update profile: send a POST request to localhost:3001/user/update and provide your acces_token with an object with either "firstame", "lastname", "email" and "password" properties or all if you want to change all of them.
+- user upgrade subscription plan: send a POST request to localhost:3001/user/upgrade and provide your acces_token with an object with a "newPlan" propertie set to “Intermediate” or “Premium” plan since by default every user is on a free subscription plan.
+- see all the subscription plans: send a GET request to localhost:3001/subscription.
 
 **Interpretation**: 
 

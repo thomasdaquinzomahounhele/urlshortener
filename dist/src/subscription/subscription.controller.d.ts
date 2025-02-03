@@ -1,4 +1,5 @@
 export declare class SubscriptionController {
+    private readonly logger;
     getSubscriptionPlans(): {
         plans: {
             Free: {

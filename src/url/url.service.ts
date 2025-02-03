@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotAcceptableException, forwardRef } from '@nestjs/common';
+import { Inject, Injectable, Logger, NotAcceptableException, forwardRef } from '@nestjs/common';
 import { CreateShortUrlDto } from '../common/dto';
 import { FUNCTION, Urlshortener } from './function';
 import { InjectModel } from '@nestjs/mongoose';
@@ -21,8 +21,10 @@ export class UrlService {
         @Inject(forwardRef(() => UserService))
         private userService: UserService
     ){}
-
+    private readonly logger = new Logger(UrlService.name);
+    
     async findOneUrl(id: string): Promise<Url>{
+        this.logger.log("Querying db with Url id")
         const url: Url = await this.urlModel.findOne({ id: id });
         return url;
     }

@@ -2,6 +2,7 @@ import { CustomDomainRedirectionService } from './custom-domain-redirection.serv
 export declare class CustomDomainRedirectionController {
     private customDomainRedirectionService;
     constructor(customDomainRedirectionService: CustomDomainRedirectionService);
+    private readonly logger;
     redirect(param: string): Promise<{
         longUrl: string;
     }>;

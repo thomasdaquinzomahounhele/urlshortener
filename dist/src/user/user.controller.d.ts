@@ -5,6 +5,7 @@ import { Request } from 'express';
 export declare class UserController {
     private userService;
     constructor(userService: UserService);
+    private readonly logger;
     signUp(dto: SignUpDto): Promise<{
         message: string;
     }>;
