@@ -9,7 +9,6 @@ To be able to run the code you need some tooling installed first:
 
 - Node.js - https://nodejs.org/
 - docker - https://docs.docker.com/get-docker/
-- Monsend a POST requestDB - https://www.monsend a POST requestdb.com/docs/v3.0/tutorial/install-monsend a POST requestdb-on-ubuntu/
 
 To install the dependencies run “npm install” or “yarn install” in your terminal.
 
